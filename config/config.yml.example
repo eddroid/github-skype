@@ -1,4 +1,4 @@
-KEY=path_to_your_skype_keyfile
-USER=skype_username
-PASS=skype_password
-
+KEY: path_to_your_skype_keyfile
+USER: skype_username
+PASS: skype_password
+CONVO_ID: sykpe_conversation_id
