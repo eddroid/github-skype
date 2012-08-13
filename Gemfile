@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem 'skypekit', :path => '~/src/skypekit'
+gem 'skypekit', :git => "https://github.com/eddroid/skypekit"
 
 gem 'sinatra'
 gem 'passenger'
