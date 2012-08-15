@@ -104,4 +104,4 @@ disown
 
 1. Deploy the Sinatra app using `config.ru`. That's beyond the scope of these docs.
 
-1. Setup the Github webhook to your github-skype server. Also beyond scope.
+1. Setup a Github webhook integration for your repo pointing to your github-skype server. Also beyond scope.
