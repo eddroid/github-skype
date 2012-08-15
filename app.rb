@@ -27,12 +27,13 @@ end
 
 loop do
   event = $skype.get_event
-  puts event.inspect
 
   unless event
     sleep 5
     next
   end
+
+  puts event.data.inspect
 
   case event.type
 
