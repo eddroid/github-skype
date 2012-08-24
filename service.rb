@@ -1,29 +1,3 @@
-configure do
-  require 'skypekit'
-  config = YAML.load(File.read('./config/config.yml'))
-
-  puts "initializing..."
-  puts config['KEY']
-  $skype = Skypekit::Skype.new(:keyfile => config['KEY'])
-  puts "initialized."
-
-  puts "starting..."
-  $skype.start
-  puts "started"
-
-  puts "logging in..."
-  $skype.login(config['USER'], config['PASS'])
-  puts "logged in"
-
-  set :convo_id, config['CONVO_ID']
-end
-
-at_exit do
-  puts "Terminating..."
-  $skype.stop
-  exit
-end
-
 post "/" do
   payload = request.body.read
 
@@ -33,7 +7,7 @@ post "/" do
   logger.info CGI.parse(payload)["payload"][0]
   payload = JSON.parse(CGI.parse(payload)["payload"][0])
 
-  # message hook
+  # parse message
   logger.info "Repo: #{payload["repository"]["name"]}"
   head = payload["head_commit"]
   author = head["author"]
@@ -45,9 +19,7 @@ post "/" do
   logger.info message
 
   # deploy-hook
-  logger.info settings.convo_id
-  $skype.send_chat_message(settings.convo_id, message)
-
+  logger.info `bundle exec ruby send_skype_message.rb "#{message.gsub!('"', '\"')}"`
   200
 end
 

@@ -1,7 +1,8 @@
-PATH
-  remote: ~/src/skypekit
+GIT
+  remote: https://github.com/eddroid/skypekit
+  revision: 19ec6000286fc4ff62eefe7fce65afb99321eabd
   specs:
-    skypekit (0.0.1)
+    skypekit (0.0.2)
       ffi (>= 1.0.0)
 
 GEM
@@ -9,7 +10,7 @@ GEM
   specs:
     daemon_controller (1.0.0)
     fastthread (1.0.7)
-    ffi (1.0.11)
+    ffi (1.1.5)
     json (1.7.4)
     passenger (3.0.15)
       daemon_controller (>= 1.0.0)
