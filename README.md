@@ -1,36 +1,107 @@
 Github Skype Webhook
 ====================
 
-Post Github commits to a Skype team chat.
+Allows GitHub to post commit messages to a Skype team chat via a webhook.
+
+Setup
+-----
+
+### Assumptions
+* A 32-bit Amazon AMI OS on EC2.
+* Base dir is my home dir: `/home/ec2-user/`
+
+### Steps
+1. Get a Skype developer account: http://developer.skype.com/  
+  * It costs $5 in Skype credit. Skype credit is only available in increments of $10.
+
+2. Download the [SkypeKit SDK for Desktop](http://developer.skype.com/account/tools).
+
+3. Create a Skype project, generate a keypair, and download it.
 
 Installation
 ------------
 
-1. Get a Skype developer account: http://developer.skype.com/  
-  * It costs $5 in Skype credit. Skype credit is only available in increments of $10.
+1. Install some libs
+```
+sudo yum update -y
+sudo yum install -y git make gcc-c++ mesa-libGL-devel freeglut-devel
+```
 
-2. Download the [SkypeKit SDK](http://developer.skype.com/account/tools).
+1. Amazon didn't have a package for CMake version 2.8.2 or greater. If you don't have it, build it.
+```
+wget "http://www.cmake.org/files/v2.8/cmake-2.8.9.tar.gz"
+tar -zvxf cmake-2.8.9.tar.gz
+cd cmake-2.8.9
+./bootstrap
+make
+sudo make install
+cmake --version # should return "cmake version 2.8.9"
+```
 
-3. Build [libskypekit](https://github.com/railsware/libskypekit).  
-  * It requires the SkypeKit SDK.  
-  * It wraps the SDK.
+1. Back home: `cd ..`
 
-4. Clone this repo.
+1. Build the SkypeKit SDK
+```
+tar -zxvf sdp-distro-desktop-skypekit_4.3.1.17_1899690.tar.gz
+cd sdp-distro-desktop-skypekit_4.3.1.17_1899690/interfaces/skype/cpp_embedded/
+./BuildWithCmake.sh
+```
 
-5. Bundle install to build the [skypekit](https://github.com/railsware/skypekit) gem.  
-  * I used my [fork](https://github.com/eddroid/skypekit) for my build.  
-  * The skypekit gem requires libskypekit.  
+1. Back home: `cd ../../../../`
 
-6. Download a [SkypeKit Runtime](http://developer.skype.com/skypekit/development-guide/skype-kit-runtime-versions) for your OS and chipset.  
-  * The SkypeKit Runtime is a headless version of Skype.  All requests to Skype's servers are proxied through it.
-  * The runtime must be running simultaneously in a separate process for Skype apps to work.
+1. Build [libskypekit](https://github.com/railsware/libskypekit)
+```
+git clone https://github.com/railsware/libskypekit.git
+cd libskypekit
+DEBUG=1 SKYPEKIT_SDK=~/sdp-distro-desktop-skypekit_4.3.1.17_1899690/ ./build.sh
+sudo ./install.sh
+sudo ln -s /usr/local/lib/libskypekit.so /usr/lib/libskypekit.so
+```
+If you get an error saying "recompile with -fPIC", read the libskypekit docs. You should delete the SDK directory and start again. You are using a 32-bit OS, right?
 
-7. Request a Skype development key pair.
-  * Gives your app permission to access the Skype server.
-  * Development key pairs expire in a few months, but you can always generate another one.
+1. Back home: `cd ..`
 
-8. Run the skypekit gem's ping\_pong example app. Use it to get the convo\_id for the team chat you want to post messages to.
+1. Build this app
+```
+git clone https://github.com/eddroid/github-skype.git
+cd github-skype
+sudo yum install -y rubygems ruby-devel libffi-devel
+sudo gem install bundler --no-rdoc --no-ri
+bundle
+```
 
-9. Generate your config: ./config/config.yml.example -> ./config/config.yml
+1. Back home: `cd ..`
 
-10. Test with app.rb. Deploy the Sinatra app (service.rb) via config.ru.
+1. In a separate window start the Skype runtime. The runtime must be running at the same time as the app.
+```
+cd sdp-distro-desktop-skypekit_4.3.1.17_1899690/bin/linux-x86
+./linux-x86-skypekit-novideo
+```
+
+1.  Back home: `cd ..`
+
+1. Configure this app
+```
+cd github-skype/
+cp config/config.yml.example config/config.yml
+```
+Edit config.yml. Skip the convo_id for now. Did you remember to get your keypair from the Skype developer site?
+
+1. Start the test app: `bundle exec ruby app.rb`
+You'll see lots of output text. Look for "Congrats! We are Logged in!" to confirm that you were able to login successfully.
+
+1. Send yourself (or have a friend send you) a Skype message in the team chat room. You'll see output that looks like this:
+```
+<Skypekit::FFI::ChatMessageData:0xb6e59528> convo_id=#XXXX convo_guid=#XXXX author=XXX author_displayname=XXX sent_at=Wed Aug XX 00:39:53 +0000 2012 body=message
+```
+Get the convo_id from this output.
+
+1. Ctrl-C the app. Note that the Skype runtime dies with it. You'll need to restart that and keep it running in the background.
+```
+./linux-x86-skypekit-novideo &
+disown
+```
+
+1. Deploy the Sinatra app using `config.ru`. That's beyond the scope of these docs.
+
+1. Setup a Github webhook integration for your repo pointing to your github-skype server. Also beyond scope.
