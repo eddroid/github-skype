@@ -72,20 +72,12 @@ bundle
 
 1. Back home: `cd ..`
 
-1. In a separate window start the Skype runtime. The runtime must be running at the same time as the app.
-```
-cd sdp-distro-desktop-skypekit_4.3.1.17_1899690/bin/linux-x86
-./linux-x86-skypekit-novideo
-```
-
-1.  Back home: `cd ..`
-
 1. Configure this app
 ```
 cd github-skype/
 cp config/config.yml.example config/config.yml
 ```
-Edit config.yml. Skip the convo_id for now. Did you remember to get your keypair from the Skype developer site?
+Edit `config.yml`. Skip the convo_id for now. Did you remember to get your keypair from the Skype developer site?
 
 1. Start the test app: `bundle exec ruby send_skype_message.rb`
 You'll see lots of output text. Look for "Congrats! We are Logged in!" to confirm that you were able to login successfully.
