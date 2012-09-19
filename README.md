@@ -87,7 +87,7 @@ cp config/config.yml.example config/config.yml
 ```
 Edit config.yml. Skip the convo_id for now. Did you remember to get your keypair from the Skype developer site?
 
-1. Start the test app: `bundle exec ruby app.rb`
+1. Start the test app: `bundle exec ruby send_skype_message.rb`
 You'll see lots of output text. Look for "Congrats! We are Logged in!" to confirm that you were able to login successfully.
 
 1. Send yourself (or have a friend send you) a Skype message in the team chat room. You'll see output that looks like this:
