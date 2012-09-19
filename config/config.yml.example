@@ -1,4 +1,5 @@
-KEY: path_to_your_skype_keyfile
+KEY: path_to_your_skype_keyfile.pem
 USER: skype_username
 PASS: skype_password
-CONVO_ID: sykpe_conversation_id
+CONVO_ID: skype_conversation_id
+SKYPEKIT_BINARY: path_to_skypekit/bin/linux-x86/linux-x86-skypekit-novideo

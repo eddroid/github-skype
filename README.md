@@ -96,11 +96,7 @@ You'll see lots of output text. Look for "Congrats! We are Logged in!" to confir
 ```
 Get the convo_id from this output.
 
-1. Ctrl-C the app. Note that the Skype runtime dies with it. You'll need to restart that and keep it running in the background.
-```
-./linux-x86-skypekit-novideo &
-disown
-```
+1. Ctrl-C the app. Note that the Skype runtime dies with it.
 
 1. Deploy the Sinatra app using `config.ru`. That's beyond the scope of these docs.
 
