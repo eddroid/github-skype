@@ -19,7 +19,7 @@ post "/" do
   logger.info message
 
   # deploy-hook
-  logger.info `bundle exec ruby send_skype_message.rb "#{message.gsub!('"', '\"')}"`
+  logger.info `bundle exec ruby send_skype_message.rb \"#{message.gsub!('"', '\"')}\"`
   200
 end
 
