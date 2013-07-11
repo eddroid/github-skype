@@ -1,3 +1,6 @@
+**Note: SkypeKit is being decomissioned in favor of Skype URIs: https://support.skype.com/en/faq/FA12322/what-is-skypekit**
+This hasn't been updated for the new Skype API.
+
 Github Skype Webhook
 ====================
 
